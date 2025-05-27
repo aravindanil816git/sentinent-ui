@@ -5,7 +5,7 @@ const ToggleContainer = styled.div`
   display: inline-flex;
   align-items: center;
   background: #eee;
-  border-radius: 2rem;
+  border-radius: 2px;
   padding: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 `;
