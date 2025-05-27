@@ -6,7 +6,6 @@ const CanvasWrapper = styled.div`
 `;
 
 const MessagesContainer = styled.div`
-  /* Add any additional styles if needed */
 `;
 
 const MessageBlock = styled.div`

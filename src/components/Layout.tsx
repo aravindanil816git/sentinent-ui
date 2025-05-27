@@ -22,10 +22,8 @@ const SideBar = styled.aside`
   z-index: 100;
 
   @media (min-width: 769px) {
-    position: static;
     width: 80px;
     min-width: 80px;
-    height: 100vh;
     flex-direction: column;
     align-items: center;
     padding: 2rem 0 0 0;

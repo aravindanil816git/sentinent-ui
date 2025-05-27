@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ToggleContainer = styled.div`
-  display: inline-flex;
+    display: flex;
   align-items: center;
   background: #eee;
   border-radius: 20px;
   padding: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  height: 32px;
 `;
 
 const Switch = styled.button<{ active: boolean }>`

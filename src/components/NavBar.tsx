@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { FaGlobe, FaHouse, FaHourglass } from "react-icons/fa6";
 import Drawer from "./Drawer";
 import { useState } from "react";
+import { QuickActions } from "./QuickActions";
 
 const NavBarContainer = styled.nav`
   display: flex;
@@ -14,47 +15,69 @@ const NavBarContainer = styled.nav`
 
   @media (min-width: 769px) {
     flex-direction: column;
+    height: 100%;
   }
 `;
 
 const IconButton = styled.button<{ active: boolean }>`
-    background: none;
-    border: none;
-    color: ${({ active }) => (active ? "black" : "#aaa")};
-    font-size: 25px;
-    cursor: pointer;
-    transition: color 0.2s;
-    border-radius: 2px;
-    border-top: ${({ active }) => (active ? "2px solid black" : "none")};
-    padding-top: 15px;
-    width: 100%;
+  background: none;
+  border: none;
+  color: ${({ active }) => (active ? "black" : "#aaa")};
+  font-size: 25px;
+  cursor: pointer;
+  transition: color 0.2s;
+  border-radius: 2px;
+  border-top: ${({ active }) => (active ? "2px solid black" : "none")};
+  padding-top: 15px;
+  width: 100%;
 
-    &:hover {
-      color: black !important;
-    }
+  &:hover {
+    color: black !important;
+  }
 
-    @media (min-width: 769px) {
-        border-right: ${({ active }) => (active ? "2px solid black" : "none")};
-        border-top: none;
-    }
+  @media (min-width: 769px) {
+    border-right: ${({ active }) => (active ? "2px solid black" : "none")};
+    border-top: none;
+  }
 `;
 
 const NavItem = styled.div`
   display: flex;
   flex-direction: column;
-    align-items: center;
+  align-items: center;
 `;
 
 const NavItemName = styled.span`
-    font-size: 12px
-    
-    ${IconButton}:hover & {
-        color: black;
-    }
+  font-size: 12px ${IconButton}:hover & {
+    color: black;
+  }
 
-    @media (min-width: 769px) {
-        display: none;
-}
+  @media (min-width: 769px) {
+    display: none;
+  }
+`;
+
+const QuickActionsWrapper = styled.div`
+  display: none;
+  @media (min-width: 769px) {
+    display: flex;
+  }
+`;
+
+const NavItemWrapper = styled.div`
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+  padding: 0 20px;
+
+  @media (min-width: 769px) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    padding: 0;
+  }
 `;
 
 const NavBar = () => {
@@ -63,12 +86,12 @@ const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const navItems = [
-    { to: "/chat", icon: <FaHouse />, key: "chat" , name: "Home"},
+    { to: "/chat", icon: <FaHouse />, key: "chat", name: "Home" },
     { to: "/", icon: <FaHourglass />, key: "history", name: "History" },
-    { to: "/disabled", icon: <FaGlobe />, key: "discover", name: "Discover" },
+    { to: "", icon: <FaGlobe />, key: "discover", name: "Discover" },
   ];
 
-  const handleNavClick = (item: typeof navItems[0]) => {
+  const handleNavClick = (item: (typeof navItems)[0]) => {
     if (item.key === "history") {
       setDrawerOpen(true);
     } else {
@@ -83,23 +106,32 @@ const NavBar = () => {
   return (
     <>
       <NavBarContainer>
-        {navItems.map((item) => (
-          <NavItem key={item.key}>
-            <IconButton
-              active={
-                location.pathname === item.to ||
-                (item.to === "/chat" && location.pathname.startsWith("/chat"))
-              }
-              onClick={() => handleNavClick(item)}
-              aria-label={item.key}
-            >
-              {item.icon}
-            </IconButton>
-            <NavItemName>{item.name}</NavItemName>
-          </NavItem>
-        ))}
+        <NavItemWrapper>
+          {navItems.map((item) => (
+            <NavItem key={item.key}>
+              <IconButton
+                active={
+                  location.pathname === item.to ||
+                  (item.to === "/chat" && location.pathname.startsWith("/chat"))
+                }
+                onClick={() => handleNavClick(item)}
+                aria-label={item.key}
+              >
+                {item.icon}
+              </IconButton>
+              <NavItemName>{item.name}</NavItemName>
+            </NavItem>
+          ))}
+        </NavItemWrapper>
+        <QuickActionsWrapper>
+          <QuickActions />
+        </QuickActionsWrapper>
       </NavBarContainer>
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} onSelectChat={handleSelectChat} />
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onSelectChat={handleSelectChat}
+      />
     </>
   );
 };

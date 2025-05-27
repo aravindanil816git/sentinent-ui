@@ -30,11 +30,12 @@ const InputWrapper = styled.div`
   z-index: 10;
 `;
 
+
 const Chat = () => {
   const { id } = useParams<{ id: string }>();
   const { createOrUpdateChatSession } = useCreateOrUpdateChatSession();
   const [chatId, setChatId] = useState<string | undefined>(id);
-  const [chartStarted, setChatStarted] = useState(false);
+  const [chatStarted, setChatStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // Update chatId when id param changes
@@ -60,7 +61,10 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    if (chatId && !chartStarted) {
+    if(!chatId) {
+        setChatStarted(false);
+    }
+    if (chatId && !chatStarted) {
       setChatStarted(true);
     }
   }, [chatId]);
@@ -69,15 +73,14 @@ const Chat = () => {
 
   const handleQuickActionClick = () => {
     setChatId(undefined);
-    setChatStarted(false);
-    navigate("/chat/");
+    navigate("/");
   };
 
   return (
     <>
       <QuickActions onClick={handleQuickActionClick} />
       <ChatContainer>
-        {chartStarted && (
+        {chatStarted && (
           <CanvasWrapper>
             {isLoading ? (
               <Loader seed="What is sentinent"/>
@@ -87,7 +90,7 @@ const Chat = () => {
           </CanvasWrapper>
         )} 
         <InputWrapper>
-          <ChatInput onSubmit={onSubmit} chartStarted={chartStarted} />
+          <ChatInput onSubmit={onSubmit} chatStarted={chatStarted} />
         </InputWrapper>
       </ChatContainer>
     </>

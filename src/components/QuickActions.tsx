@@ -9,6 +9,11 @@ const ActionsWrapper = styled.div`
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #f0f0f0;
+
+    @media (min-width: 769px) {
+    background: transparent;
+    flex-direction: column;
+  }
 `;
 
 const AddButton = styled.div`
