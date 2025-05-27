@@ -6,6 +6,7 @@ const MainContainer = styled.div`
   display: flex;
   height: 100dvh;
   flex-direction: column-reverse;
+  flex: 1;
 
   @media (min-width: 769px) {
     flex-direction: row; /* Desktop: row */
@@ -29,32 +30,35 @@ const SideBar = styled.aside`
     align-items: center;
     padding: 2rem 0 0 0;
     background: #F5F5F5;
+    justify-content: center;
   }
 `
 
 const Content = styled.main`
-  width: 100vw;
-  box-sizing: border-box;
-  padding: 16px;
+    flex: 1;
+    box-sizing: border-box;
+    padding: 16px;
+    height: 100%;
+        display: flex;
+    flex-direction: column;
 
   @media (min-width: 769px) {
-    margin-left: 80px;
-    margin-bottom: 0;
-    padding: 2rem;
-    width: auto;
     min-height: auto;
   }
 `
 
-const Layout = () => (
-  <MainContainer>
-    <SideBar>
-      <NavBar />
-    </SideBar>
-    <Content>
-      <Outlet />
-    </Content>
-  </MainContainer>
-)
+const Layout = () => {
+
+  return (
+    <MainContainer>
+      <SideBar>
+        <NavBar />
+      </SideBar>
+      <Content>
+        <Outlet />
+      </Content>
+    </MainContainer>
+  );
+}
 
 export default Layout

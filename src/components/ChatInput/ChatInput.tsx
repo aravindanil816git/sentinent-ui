@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import ModelSwitch from "./ModelSwitch";
 import AutoSuggestions from "./AutoSuggestions";
+import SentinentIcon from "../../assets/Sentinent.svg";
 
 const Container = styled.div`
   width: 100%;
@@ -24,16 +25,17 @@ const Input = styled.textarea`
   color: #000;
 `;
 
-const SubmitButton = styled.button`
-  height: 44px;
-  width: 44px;
-  color: #fff;
-  border: 1px solid #f1f1f1;
-  border-radius: 50%;
-  background: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
+const SubmitButton = styled.button<{ isValid?: boolean }>`
+    height: 44px;
+    width: 44px;
+    color: #707070;
+    border: 1px solid #707070;
+    border-radius: 50%;
+    background: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: ${props => props.isValid ? '#F1F1F1' : 'white'};
 `;
 const InputWrapper = styled.form`
     display: flex;
@@ -44,19 +46,31 @@ const ControlsWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const ChatInput = ({ onSubmit }: { onSubmit?: (value: string) => void }) => {
+const ChatInput = ({ onSubmit, chartStarted }: { onSubmit: (value: {
+    value: string
+    model: string;
+}) => void;
+    chartStarted: boolean
+ }) => {
   const [value, setValue] = useState("");
+//   const [model, setModel] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
+    if(value) {
     e.preventDefault();
-    if (value.trim()) {
-      onSubmit?.(value);
-      setValue("");
-    }
+      onSubmit({
+        value,
+        model: ""
+    });
+    setValue("");
+    };
   };
 
   return (
     <>
+    {!chartStarted &&
+        <img src={SentinentIcon}   style={{ marginBottom: "24px"}}/>
+    }
     <InputWrapper onSubmit={handleSubmit}>
       <Container>
         <Input
@@ -66,12 +80,14 @@ const ChatInput = ({ onSubmit }: { onSubmit?: (value: string) => void }) => {
         />
 
         <ControlsWrapper>
-          <ModelSwitch />
-          <SubmitButton type="submit">➡️</SubmitButton>
+          <ModelSwitch onToggle={(_model) =>{
+            console.log(_model);
+          } }/>
+          <SubmitButton type="submit" isValid={value.length > 0}>&rarr;</SubmitButton>
         </ControlsWrapper>
       </Container>
     </InputWrapper>
-    <AutoSuggestions />
+    {!chartStarted &&<AutoSuggestions /> }
     </>
   );
 };

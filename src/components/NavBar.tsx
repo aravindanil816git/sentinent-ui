@@ -1,6 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { FaHome, FaComments, FaUser } from "react-icons/fa";
+// import { FaHome, FaComments, FaUser, FaHourglass } from "react-icons/fa";
+import { FaGlobe, FaHouse, FaHourglass } from "react-icons/fa6";
+import Drawer from "./Drawer";
+import { useState } from "react";
 
 const NavBarContainer = styled.nav`
   display: flex;
@@ -18,45 +21,86 @@ const IconButton = styled.button<{ active: boolean }>`
     background: none;
     border: none;
     color: ${({ active }) => (active ? "black" : "#aaa")};
-    font-size: 2rem;
+    font-size: 25px;
     cursor: pointer;
     transition: color 0.2s;
     border-radius: 2px;
     border-top: ${({ active }) => (active ? "2px solid black" : "none")};
-    padding-top: 0.5rem;
+    padding-top: 15px;
     width: 100%;
 
     &:hover {
       color: black !important;
     }
+
+    @media (min-width: 769px) {
+        border-right: ${({ active }) => (active ? "2px solid black" : "none")};
+        border-top: none;
+    }
+`;
+
+const NavItem = styled.div`
+  display: flex;
+  flex-direction: column;
+    align-items: center;
+`;
+
+const NavItemName = styled.span`
+    font-size: 12px
+    
+    ${IconButton}:hover & {
+        color: black;
+    }
+
+    @media (min-width: 769px) {
+        display: none;
+}
 `;
 
 const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const navItems = [
-    { to: "/", icon: <FaHome />, key: "home" },
-    { to: "/chat", icon: <FaComments />, key: "chat" },
-    { to: "/profile", icon: <FaUser />, key: "profile" },
+    { to: "/chat", icon: <FaHouse />, key: "chat" , name: "Home"},
+    { to: "/", icon: <FaHourglass />, key: "history", name: "History" },
+    { to: "/disabled", icon: <FaGlobe />, key: "discover", name: "Discover" },
   ];
 
+  const handleNavClick = (item: typeof navItems[0]) => {
+    if (item.key === "history") {
+      setDrawerOpen(true);
+    } else {
+      navigate(item.to);
+    }
+  };
+
+  const handleSelectChat = (chatId: string) => {
+    navigate(`/chat/${chatId}`);
+  };
+
   return (
-    <NavBarContainer>
-      {navItems.map((item) => (
-        <IconButton
-          key={item.key}
-          active={
-            location.pathname === item.to ||
-            (item.to === "/chat" && location.pathname.startsWith("/chat"))
-          }
-          onClick={() => navigate(item.to)}
-          aria-label={item.key}
-        >
-          {item.icon}
-        </IconButton>
-      ))}
-    </NavBarContainer>
+    <>
+      <NavBarContainer>
+        {navItems.map((item) => (
+          <NavItem key={item.key}>
+            <IconButton
+              active={
+                location.pathname === item.to ||
+                (item.to === "/chat" && location.pathname.startsWith("/chat"))
+              }
+              onClick={() => handleNavClick(item)}
+              aria-label={item.key}
+            >
+              {item.icon}
+            </IconButton>
+            <NavItemName>{item.name}</NavItemName>
+          </NavItem>
+        ))}
+      </NavBarContainer>
+      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} onSelectChat={handleSelectChat} />
+    </>
   );
 };
 

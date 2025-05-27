@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Chat from './pages/Chat'
-import App from './App'
 import Layout from './components/Layout'
 
 function AppRouter() {
@@ -8,7 +7,7 @@ function AppRouter() {
     <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<App />} />
+          <Route index element={<Chat />} />
           <Route path="chat" element={<Chat />} />
           <Route path="chat/:id" element={<Chat />} />
         </Route>
