@@ -44,6 +44,7 @@ const Content = styled.main`
 
   @media (min-width: 769px) {
     min-height: auto;
+    padding: 0 20%;
   }
 `
 
