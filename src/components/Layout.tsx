@@ -37,8 +37,9 @@ const Content = styled.main`
     box-sizing: border-box;
     padding: 16px;
     height: 100%;
-        display: flex;
+    display: flex;
     flex-direction: column;
+    padding-top: 0;
 
   @media (min-width: 769px) {
     min-height: auto;

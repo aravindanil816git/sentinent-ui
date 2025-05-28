@@ -36,7 +36,7 @@ const IconButton = styled.button<{ active: boolean }>`
   }
 
   @media (min-width: 769px) {
-    border-right: ${({ active }) => (active ? "2px solid black" : "none")};
+    border-right: 
     border-top: none;
   }
 `;
@@ -47,7 +47,8 @@ const NavItem = styled.div`
   align-items: center;
 `;
 
-const NavItemName = styled.span`
+const NavItemName = styled.span<{ active: boolean }>`
+  color: ${({ active }) => (active ? "black" : "#A9A9A9")};
   font-size: 12px ${IconButton}:hover & {
     color: black;
   }
@@ -55,6 +56,8 @@ const NavItemName = styled.span`
   @media (min-width: 769px) {
     display: none;
   }
+
+  font-weight: 600;
 `;
 
 const QuickActionsWrapper = styled.div`
@@ -100,8 +103,18 @@ const NavBar = () => {
   };
 
   const handleSelectChat = (chatId: string) => {
-    navigate(`/chat/${chatId}`);
+    // Set chat as undefined before navigating
+    if (chatId === "") {
+      // Optionally, you can manage chatId state here if needed
+      navigate("/");
+    } else {
+      navigate(`/chat/${chatId}`);
+    }
   };
+
+  const isActive = (item: (typeof navItems)[0]) =>
+    location.pathname === item.to ||
+    (item.to === "/chat" && location.pathname.startsWith("/chat"));
 
   return (
     <>
@@ -110,21 +123,18 @@ const NavBar = () => {
           {navItems.map((item) => (
             <NavItem key={item.key}>
               <IconButton
-                active={
-                  location.pathname === item.to ||
-                  (item.to === "/chat" && location.pathname.startsWith("/chat"))
-                }
+                active={isActive(item)}
                 onClick={() => handleNavClick(item)}
                 aria-label={item.key}
               >
                 {item.icon}
               </IconButton>
-              <NavItemName>{item.name}</NavItemName>
+              <NavItemName active={isActive(item)}>{item.name}</NavItemName>
             </NavItem>
           ))}
         </NavItemWrapper>
         <QuickActionsWrapper>
-          <QuickActions />
+          <QuickActions onClick={() => handleSelectChat("")} />
         </QuickActionsWrapper>
       </NavBarContainer>
       <Drawer

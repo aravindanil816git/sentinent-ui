@@ -1,11 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import ChatInput from "../components/ChatInput/ChatInput";
 import ConversationCanvas from "../components/ConversationCanvas/ConversationCanvas";
 import styled from "styled-components";
 import useCreateOrUpdateChatSession from "../hooks/useCreateUpdateChat";
 import { useEffect, useState } from "react";
 import { QuickActions } from "../components/QuickActions";
-import Loader from "../components/Loader";
+import { isMobile } from "../utils/util";
 
 const ChatContainer = styled.div`
   display: flex;
@@ -30,19 +30,31 @@ const InputWrapper = styled.div`
   z-index: 10;
 `;
 
-
 const Chat = () => {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const { createOrUpdateChatSession } = useCreateOrUpdateChatSession();
   const [chatId, setChatId] = useState<string | undefined>(id);
   const [chatStarted, setChatStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Update chatId when id param changes
+  // useEffect(() => {
+  //   setChatId(id);
+  //   setChatStarted(false);
+  // }, [id]);
+
+  // Reset chatId if at root path
   useEffect(() => {
-    setChatId(id);
-    setChatStarted(false);
-  }, [id]);
+    if (location.pathname === "/") {
+      setChatId(undefined);
+      setChatStarted(false);
+    } else {
+      setChatId(id);
+      setChatStarted(true);
+    }
+  }, [location.pathname]);
+
+  const navigate = useNavigate();
 
   const onSubmit = (query: { value: string; model: string }) => {
     const input = query.value;
@@ -50,26 +62,28 @@ const Chat = () => {
     const newChatId = createOrUpdateChatSession(chatId, [
       { role: "user", content: input },
     ]);
+    setChatId(newChatId);
+
+    if (newChatId) {
+      navigate(`/chat/${newChatId}`, { replace: true });
+    }
 
     setTimeout(() => {
       createOrUpdateChatSession(newChatId, [
-        { role: "assistant", content: response },
+        { role: "assistant", content: response(input) },
       ]);
       setIsLoading(false);
-    }, 1000); // Simulate AI response delay
-    setChatId(newChatId);
+    }, 1000);
   };
 
   useEffect(() => {
-    if(!chatId) {
-        setChatStarted(false);
+    if (!chatId) {
+      setChatStarted(false);
     }
     if (chatId && !chatStarted) {
       setChatStarted(true);
     }
   }, [chatId]);
-
-  const navigate = useNavigate();
 
   const handleQuickActionClick = () => {
     setChatId(undefined);
@@ -78,17 +92,13 @@ const Chat = () => {
 
   return (
     <>
-      <QuickActions onClick={handleQuickActionClick} />
+      {isMobile() && <QuickActions onClick={handleQuickActionClick} />}
       <ChatContainer>
         {chatStarted && (
           <CanvasWrapper>
-            {isLoading ? (
-              <Loader seed="What is sentinent"/>
-            ) : (
-              <ConversationCanvas conversationId={chatId} />
-            )}
+              <ConversationCanvas conversationId={chatId} isLoading={isLoading}/>
           </CanvasWrapper>
-        )} 
+        )}
         <InputWrapper>
           <ChatInput onSubmit={onSubmit} chatStarted={chatStarted} />
         </InputWrapper>
@@ -99,5 +109,5 @@ const Chat = () => {
 
 export default Chat;
 
-
-const response = "Sentient refers to the ability to experience feelings or sensations. It means being capable of sensing or feeling, conscious of or responsive to the sensations of seeing, hearing. feeling, tasting, or smelling."
+const response = (title: string) => 
+  `${title} refers to the ability to experience feelings or sensations. It means being capable of sensing or feeling, conscious of or responsive to the sensations of seeing, hearing. feeling, tasting, or smelling.`;

@@ -34,6 +34,13 @@ const LogoWrapper = styled.div`
   font-size: 20px;
   font-weight: bold;
   color: #333;
+  border: 1px solid #212222;
+
+  @media (min-width: 769px) {
+    width: 25px;
+    height: 25px;
+    font-size: 15px;
+  }
 `;
 
 const QuickActions = ({

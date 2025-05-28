@@ -3,6 +3,8 @@ import styled from "styled-components";
 import ModelSwitch from "./ModelSwitch";
 import AutoSuggestions from "./AutoSuggestions";
 import SentinentIcon from "../../assets/Sentinent.svg";
+import { isMobile } from "../../utils/util";
+import SubmitBtnArrow from "../../assets/SubmitBtnArrow.svg";
 
 const Container = styled.div<{ chatStarted: boolean }>`
   width: 100%;
@@ -47,7 +49,9 @@ const SubmitButton = styled.button<{ isValid?: boolean }>`
   background: none;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: ${(props) => (props.isValid ? "#F1F1F1" : "white")};
 `;
 const InputWrapper = styled.div`
@@ -59,8 +63,6 @@ const ControlsWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-
-const isMobile = () => window.innerWidth < 769;
 
 const ChatInput = ({
   onSubmit,
@@ -104,7 +106,7 @@ const ChatInput = ({
               }}
             />
             <SubmitButton onClick={handleSubmit} isValid={value.length > 0}>
-              &rarr;
+              <img src={SubmitBtnArrow} />
             </SubmitButton>
           </ControlsWrapper>
         </Container>

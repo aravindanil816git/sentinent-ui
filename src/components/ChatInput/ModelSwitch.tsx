@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ToggleContainer = styled.div`
-    display: flex;
+  display: flex;
   align-items: center;
-  background: #eee;
+  background: #F6F6F6;
   border-radius: 20px;
   padding: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   height: 32px;
+  font-family: 'Nunito Sans', sans-serif;
 `;
 
 const Switch = styled.button<{ active: boolean }>`
@@ -22,6 +23,7 @@ const Switch = styled.button<{ active: boolean }>`
   transition: background 0.2s, color 0.2s;
   font-weight: 600;
   outline: none;
+  font-family: 'Nunito Sans', sans-serif;
 
   &:not(:last-child) {
     margin-right: 2px;
@@ -35,8 +37,8 @@ type ModelSwitchProps = {
 };
 
 const ModelSwitch: React.FC<ModelSwitchProps> = ({
-  leftLabel = 'GPT-3.5',
-  rightLabel = 'GPT-4',
+  leftLabel = '4s -mini',
+  rightLabel = 's1-preview',
   onToggle,
 }) => {
   const [isRight, setIsRight] = useState(false);
