@@ -36,7 +36,7 @@ const IconButton = styled.button<{ active: boolean }>`
   }
 
   @media (min-width: 769px) {
-    border-right: 
+    border-right: 2px solid black;
     border-top: none;
   }
 `;
